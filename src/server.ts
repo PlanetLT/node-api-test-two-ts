@@ -1,7 +1,7 @@
 import express from "express";
 import helmet from "helmet";
-import { logger } from "./common/utils/logger";
-import routes from "./route";
+import { logger } from "./common/utils/logger.js";
+import routes from "./route.js";
 
 const app = express();
 

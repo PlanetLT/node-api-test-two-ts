@@ -1,5 +1,5 @@
 // domain/user.entity.ts
-import type { IUser } from "./user.interface";
+import type { IUser } from "./user.interface.js";
 
 export class User implements IUser {
   id!: string;

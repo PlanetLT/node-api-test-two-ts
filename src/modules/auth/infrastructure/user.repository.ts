@@ -1,6 +1,6 @@
-import { prisma } from "../../../common/prisma/prisma";
-import type { IUserRepository } from "../domain/user.repository.interface";
-import type { IUser } from "../domain/user.interface";
+import { prisma } from "../../../common/prisma/prisma.js";
+import type { IUserRepository } from "../domain/user.repository.interface.js";
+import type { IUser } from "../domain/user.interface.js";
 
 export class UserRepository implements IUserRepository {
   async findByEmail(email: string) {

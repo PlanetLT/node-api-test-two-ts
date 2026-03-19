@@ -1,6 +1,6 @@
-import  { UserRepository } from "../infrastructure/user.repository";
-import type { RegisterInput } from "../schemas/register.schema";
-import { User } from "../domain/user.entity";
+import  { UserRepository } from "../infrastructure/user.repository.js";
+import type { RegisterInput } from "../schemas/register.schema.js";
+import { User } from "../domain/user.entity.js";
 import bcrypt from "bcrypt";
 import crypto from "crypto";
 

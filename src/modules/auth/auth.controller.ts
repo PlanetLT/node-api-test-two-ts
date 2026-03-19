@@ -1,7 +1,7 @@
 import type { Request, Response } from "express";
 import type { ZodType } from "zod";
-import type { RegisterInput } from "./schemas/register.schema";
-import { AuthService } from "./applicaiton/auth.service";
+import type { RegisterInput } from "./schemas/register.schema.js";
+import { AuthService } from "./applicaiton/auth.service.js";
 
 export class AuthController {
   constructor(private service: AuthService) {}

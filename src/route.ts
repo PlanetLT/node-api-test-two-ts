@@ -1,8 +1,8 @@
 import { Router } from "express";
-import { AuthController } from "./modules/auth/auth.controller";
-import { AuthService } from "./modules/auth/applicaiton/auth.service";
-import { UserRepository } from "./modules/auth/infrastructure/user.repository";
-import { registerSchema } from "./modules/auth/schemas/register.schema";
+import { AuthController } from "./modules/auth/auth.controller.js";
+import { AuthService } from "./modules/auth/applicaiton/auth.service.js";
+import { UserRepository } from "./modules/auth/infrastructure/user.repository.js";
+import { registerSchema } from "./modules/auth/schemas/register.schema.js";
 
 const router = Router();
 const service = new AuthService(new UserRepository());

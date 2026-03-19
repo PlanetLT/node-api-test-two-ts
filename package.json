@@ -4,9 +4,9 @@
   "description": "",
   "main": "index.js",
   "scripts": {
-    "dev": "tsx watch src/server.ts",
-    "build": "tsc --noEmit",
-    "start": "tsx src/server.ts",
+    "dev": "concurrently \"tsc -w\" \"wait-on dist/server.js && node dist/server.js\"",
+    "build": "tsc",
+    "start": "node dist/server.js",
     "prisma": "prisma"
   },
   "keywords": [],
@@ -29,10 +29,9 @@
     "@types/express": "^5.0.6",
     "@types/morgan": "^1.9.10",
     "@types/node": "^25.5.0",
-    "nodemon": "^3.1.14",
+    "concurrently": "^9.2.1",
     "prisma": "^7.5.0",
-    "ts-node": "^10.9.2",
-    "tsx": "^4.21.0",
-    "typescript": "^5.9.3"
+    "typescript": "^5.9.3",
+    "wait-on": "^9.0.4"
   }
 }
