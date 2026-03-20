@@ -1,14 +1,11 @@
 import { Router } from "express";
-import { AuthController } from "./modules/auth/auth.controller.js";
-import { AuthService } from "./modules/auth/applicaiton/auth.service.js";
-import { UserRepository } from "./modules/auth/infrastructure/user.repository.js";
 import { registerSchema } from "./modules/auth/schemas/register.schema.js";
 
-const router = Router();
-const service = new AuthService(new UserRepository());
-const controller = new AuthController(service);
+import { authController } from "./modules/auth/container/auth.container.js";
 
-router.post("/register", (req, res) => controller.register(req, res, registerSchema));
-router.get("/users", (req, res) => controller.listUsers(req, res));
+const router = Router();
+
+router.post("/register", (req, res) => authController.register(req, res, registerSchema));
+router.get("/users", (req, res) => authController.listUsers(req, res));
 
 export default router;
