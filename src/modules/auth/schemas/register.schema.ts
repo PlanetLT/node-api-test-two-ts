@@ -1,4 +1,4 @@
-import { z } from "zod";
+import { z } from "../../../common/utils/zod";
 
 export const registerSchema = z.object({
   name: z.string().min(1),
