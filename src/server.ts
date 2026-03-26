@@ -6,6 +6,7 @@ import { errorHandler } from "./common/middlewares/error-handler";
 import routes from "./route";
 import swaggerUi from "swagger-ui-express";
 import { swaggerSpec } from "./swagger";
+import { initMongo } from "./common/db/mongo";
 
 const app = express();
 
@@ -25,6 +26,14 @@ app.use(errorHandler);
 const PORT = Number(process.env.PORT ?? 3000);
 const PUBLIC_URL = process.env.PUBLIC_URL ?? `http://localhost:${PORT}`;
 
-app.listen(PORT, () => {
-  console.log(`Server running at ${PUBLIC_URL}`);
+const bootstrap = async () => {
+  await initMongo();
+  app.listen(PORT, () => {
+    console.log(`Server running at ${PUBLIC_URL}`);
+  });
+};
+
+bootstrap().catch((error) => {
+  console.error("Failed to start server", error);
+  process.exit(1);
 });
