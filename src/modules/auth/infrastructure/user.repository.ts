@@ -23,7 +23,7 @@ export class UserRepository implements IUserRepository {
       name: user.name,
       email: user.email,
       password: user.password,
-      createdAt: user.createdAt,
+      ...(user.createdAt ? { createdAt: user.createdAt } : {}),
     };
     await collection.insertOne(doc);
     return this.toDomain(doc);
@@ -41,7 +41,7 @@ export class UserRepository implements IUserRepository {
       name: doc.name,
       email: doc.email,
       password: doc.password,
-      createdAt: doc.createdAt,
+      ...(doc.createdAt ? { createdAt: doc.createdAt } : {}),
     };
   }
 }

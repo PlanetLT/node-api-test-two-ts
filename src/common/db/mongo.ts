@@ -1,5 +1,5 @@
 import "dotenv/config";
-import { MongoClient, Db, Collection } from "mongodb";
+import { MongoClient, Db, Collection, type Document } from "mongodb";
 
 const rawUri = process.env.MONGO_URI ?? process.env.DATABASE_URL;
 
@@ -22,7 +22,9 @@ export const initMongo = async (): Promise<Db> => {
   return dbPromise;
 };
 
-export const getCollection = async <T>(name: string): Promise<Collection<T>> => {
+export const getCollection = async <T extends Document>(
+  name: string
+): Promise<Collection<T>> => {
   const db = await initMongo();
   return db.collection<T>(name);
 };
