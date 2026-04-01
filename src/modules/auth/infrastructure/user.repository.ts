@@ -1,3 +1,4 @@
+import { User } from "../domain/user.entity";
 import type { IUserRepository } from "../domain/user.repository.interface";
 import type { IUser } from "../domain/user.interface";
 import { UserModel } from "./user.model";
@@ -10,6 +11,7 @@ export class UserRepository implements IUserRepository {
   constructor(private readonly userModel = UserModel) {}
 
   async findByEmail(email: string) {
+    // Query Mongo with the normalized email shape stored in the database.
     const user = await this.userModel
       .findOne({ email: normalizeEmail(email) })
       .lean<UserRecord | null>()
@@ -18,11 +20,8 @@ export class UserRepository implements IUserRepository {
     return user ? this.toDomain(user) : null;
   }
 
-  async create(user: IUser) {
-    const created = await this.userModel.create({
-      ...user,
-      email: normalizeEmail(user.email),
-    });
+  async create(user: User) {
+    const created = await this.userModel.create(this.toPersistence(user));
 
     return this.toDomain(created.toObject<UserRecord>());
   }
@@ -33,13 +32,13 @@ export class UserRepository implements IUserRepository {
     return users.map((user) => this.toDomain(user));
   }
 
-  private toDomain(doc: UserRecord): IUser {
-    return {
-      id: doc.id,
-      name: doc.name,
-      email: doc.email,
-      password: doc.password,
-      ...(doc.createdAt ? { createdAt: doc.createdAt } : {}),
-    };
+  // Translate raw database records into domain entities before returning them upward.
+  private toDomain(doc: UserRecord): User {
+    return User.reconstitute(doc);
+  }
+
+  // Translate domain entities into plain persistence objects for Mongoose.
+  private toPersistence(user: User): IUser {
+    return user.toObject();
   }
 }

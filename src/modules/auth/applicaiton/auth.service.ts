@@ -13,6 +13,7 @@ export class AuthService {
     const exists = await this.userRepo.findByEmail(data.email);
     if (exists) throw new Error("User already registered");
 
+    // Hash before building the entity so plain passwords never reach persistence.
     const hashed = await bcrypt.hash(data.password, PASSWORD_SALT_ROUNDS);
 
     const user = User.create({

@@ -1,6 +1,7 @@
 import mongoose, { type Model } from "mongoose";
 import type { IUser } from "../domain/user.interface";
 
+// This schema describes how users are stored in MongoDB.
 const userSchema = new mongoose.Schema<IUser>(
   {
     id: {
@@ -35,5 +36,6 @@ const userSchema = new mongoose.Schema<IUser>(
 );
 
 export const UserModel: Model<IUser> =
+  // Reuse the compiled model in dev/hot-reload environments to avoid overwrite errors.
   (mongoose.models.User as Model<IUser> | undefined) ??
   mongoose.model<IUser>("User", userSchema);

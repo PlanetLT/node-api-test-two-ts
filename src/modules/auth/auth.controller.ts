@@ -8,6 +8,7 @@ export class AuthController {
   register = async (req: Request, res: Response, next: NextFunction) => {
     try {
       const user = await this.service.registerUser(req.body as RegisterInput);
+      // Return only public fields from the controller instead of leaking the full entity.
       res.json({ id: user.id, name: user.name, email: user.email });
     } catch (err: any) {
       next(err);

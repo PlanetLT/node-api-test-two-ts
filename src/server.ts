@@ -10,10 +10,12 @@ import { initMongo } from "./common/db/mongo";
 
 const app = express();
 
+// Global middleware that applies to every request.
 app.use(helmet());
 app.use(logger);
 app.use(express.json());
 
+// Expose both the raw OpenAPI document and the Swagger UI.
 app.get("/openapi.json", (_req, res) => {
   res.json(swaggerSpec);
 });
@@ -27,6 +29,7 @@ const PORT = Number(process.env.PORT ?? 3000);
 const PUBLIC_URL = process.env.PUBLIC_URL ?? `http://localhost:${PORT}`;
 
 const bootstrap = async () => {
+  // Wait for Mongo before accepting requests so handlers always have a ready database.
   await initMongo();
   app.listen(PORT, () => {
     console.log(`Server running at ${PUBLIC_URL}`);

@@ -9,6 +9,7 @@ export const validate =
       return next(result.error);
     }
 
+    // Replace req.body with parsed data so downstream code sees the validated shape.
     req.body = result.data as unknown;
     return next();
   };

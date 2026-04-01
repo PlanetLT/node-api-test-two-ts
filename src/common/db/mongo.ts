@@ -17,6 +17,7 @@ export const initMongo = async (): Promise<typeof mongoose> => {
     return mongoose;
   }
 
+  // Cache the in-flight connection so repeated bootstrap calls share the same promise.
   connectionPromise ??= mongoose.connect(
     mongoUri,
     dbName ? { dbName } : undefined
