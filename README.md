@@ -21,6 +21,10 @@ LOG_FILE=logs/trace.log
 PORT=3000
 PUBLIC_URL=http://localhost
 API_BASE_URL=http://localhost/api
+ACCESS_TOKEN_SECRET=replace-with-a-long-random-string
+REFRESH_TOKEN_SECRET=replace-with-a-long-random-string
+ACCESS_TOKEN_EXPIRES_IN=15m
+REFRESH_TOKEN_EXPIRES_IN=7d
 ```
 
 Notes:
@@ -29,6 +33,10 @@ Notes:
 - `PORT` defaults to `3000` if not set
 - `PUBLIC_URL` is used in the startup log
 - `API_BASE_URL` is used by the generated OpenAPI document
+- `ACCESS_TOKEN_SECRET` signs access tokens
+- `REFRESH_TOKEN_SECRET` signs refresh tokens
+- `ACCESS_TOKEN_EXPIRES_IN` defaults to `15m`
+- `REFRESH_TOKEN_EXPIRES_IN` defaults to `7d`
 
 ## Install
 
@@ -100,16 +108,23 @@ Expected response:
 
 ```json
 {
-  "id": "uuid",
-  "name": "Lin Thu",
-  "email": "linthu@example.com"
+  "user": {
+    "id": "uuid",
+    "name": "Lin Thu",
+    "email": "linthu@example.com"
+  },
+  "accessToken": "jwt-access-token",
+  "refreshToken": "jwt-refresh-token"
 }
 ```
 
 ### List Users
 
+This endpoint now requires an access token:
+
 ```bash
-curl http://localhost:3000/api/users
+curl http://localhost:3000/api/users \
+  -H "Authorization: Bearer YOUR_ACCESS_TOKEN"
 ```
 
 Expected response:
@@ -124,6 +139,23 @@ Expected response:
     "createdAt": "2026-04-01T00:00:00.000Z"
   }
 ]
+```
+
+### Refresh Access Token
+
+Use the refresh token to request a new access token:
+
+```bash
+curl -X POST http://localhost:3000/api/refresh-token \
+  -H "x-refresh-token: YOUR_REFRESH_TOKEN"
+```
+
+Expected response:
+
+```json
+{
+  "accessToken": "new-jwt-access-token"
+}
 ```
 
 ## MongoDB Check

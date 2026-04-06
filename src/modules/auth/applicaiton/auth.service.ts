@@ -1,5 +1,6 @@
 import bcrypt from "bcrypt";
 import crypto from "crypto";
+import { JwtService } from "../../../common/services/jwt.service";
 import { User } from "../domain/user.entity";
 import type { IUserRepository } from "../domain/user.repository.interface";
 import type { RegisterInput } from "../schemas/register.schema";
@@ -7,7 +8,10 @@ import type { RegisterInput } from "../schemas/register.schema";
 const PASSWORD_SALT_ROUNDS = 10;
 
 export class AuthService {
-  constructor(private readonly userRepo: IUserRepository) {}
+  constructor(
+    private readonly userRepo: IUserRepository,
+    private readonly jwtService: JwtService
+  ) {}
 
   async registerUser(data: RegisterInput) {
     const exists = await this.userRepo.findByEmail(data.email);
@@ -23,10 +27,29 @@ export class AuthService {
       password: hashed,
     });
 
-    return this.userRepo.create(user);
+    const savedUser = await this.userRepo.create(user);
+
+    return {
+      user: this.toPublicUser(savedUser),
+      ...this.jwtService.generateAuthTokens(savedUser.id),
+    };
   }
 
   async getUsers() {
     return this.userRepo.findAll();
+  }
+
+  refreshAccessToken(userId: string) {
+    return {
+      accessToken: this.jwtService.generateAccessToken(userId),
+    };
+  }
+
+  private toPublicUser(user: User) {
+    return {
+      id: user.id,
+      name: user.name,
+      email: user.email,
+    };
   }
 }

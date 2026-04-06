@@ -1,4 +1,5 @@
 import type { NextFunction, Request, Response } from "express";
+import { HttpError } from "../../common/errors/http-error";
 import type { RegisterInput } from "./schemas/register.schema";
 import { AuthService } from "./applicaiton/auth.service";
 
@@ -7,16 +8,33 @@ export class AuthController {
 
   register = async (req: Request, res: Response, next: NextFunction) => {
     try {
-      const user = await this.service.registerUser(req.body as RegisterInput);
-      // Return only public fields from the controller instead of leaking the full entity.
-      res.json({ id: user.id, name: user.name, email: user.email });
+      const result = await this.service.registerUser(req.body as RegisterInput);
+      res.json(result);
     } catch (err: any) {
       next(err);
     }
   };
 
-  listUsers = async (_req: Request, res: Response) => {
-    const users = await this.service.getUsers();
-    res.json(users);
+  refreshAccessToken = async (req: Request, res: Response, next: NextFunction) => {
+    try {
+      const userId = req.auth?.userId;
+
+      if (!userId) {
+        throw new HttpError("Unauthorized", 401, "UNAUTHORIZED");
+      }
+
+      res.json(this.service.refreshAccessToken(userId));
+    } catch (err) {
+      next(err);
+    }
+  };
+
+  listUsers = async (_req: Request, res: Response, next: NextFunction) => {
+    try {
+      const users = await this.service.getUsers();
+      res.json(users);
+    } catch (err) {
+      next(err);
+    }
   };
 }
